@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+Copyright 2014 Curiosity driven
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+  <head>
+    <title>Prolog interpreter</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+  <h1>Prolog interpreter</h1>
+  <p>Requires modern browser that supports <a href="http://kangax.github.io/compat-table/es6/#generators">ES6 generators</a>. See <a href="https://curiosity-driven.org/prolog-interpreter">the article</a> for implementation details.</p>
+  <p>Rules</p>
+  <textarea id="rules">exists(A, list(A, _, _, _, _)).
+exists(A, list(_, A, _, _, _)).
+exists(A, list(_, _, A, _, _)).
+exists(A, list(_, _, _, A, _)).
+exists(A, list(_, _, _, _, A)).
+
+rightOf(R, L, list(L, R, _, _, _)).
+rightOf(R, L, list(_, L, R, _, _)).
+rightOf(R, L, list(_, _, L, R, _)).
+rightOf(R, L, list(_, _, _, L, R)).
+
+middle(A, list(_, _, A, _, _)).
+
+first(A, list(A, _, _, _, _)).
+
+nextTo(A, B, list(B, A, _, _, _)).
+nextTo(A, B, list(_, B, A, _, _)).
+nextTo(A, B, list(_, _, B, A, _)).
+nextTo(A, B, list(_, _, _, B, A)).
+nextTo(A, B, list(A, B, _, _, _)).
+nextTo(A, B, list(_, A, B, _, _)).
+nextTo(A, B, list(_, _, A, B, _)).
+nextTo(A, B, list(_, _, _, A, B)).
+
+puzzle(Houses) :-
+    exists(house(red, english, _, _, _), Houses),
+    exists(house(_, spaniard, _, _, dog), Houses),
+    exists(house(green, _, coffee, _, _), Houses),
+    exists(house(_, ukrainian, tea, _, _), Houses),
+    rightOf(house(green, _, _, _, _), house(ivory, _, _, _, _), Houses),
+    exists(house(_, _, _, oldgold, snails), Houses),
+    exists(house(yellow, _, _, kools, _), Houses),
+    middle(house(_, _, milk, _, _), Houses),
+    first(house(_, norwegian, _, _, _), Houses),
+    nextTo(house(_, _, _, chesterfield, _), house(_, _, _, _, fox), Houses),
+    nextTo(house(_, _, _, kools, _),house(_, _, _, _, horse), Houses),
+    exists(house(_, _, orangejuice, luckystike, _), Houses),
+    exists(house(_, japanese, _, parliament, _), Houses),
+    nextTo(house(_, norwegian, _, _, _), house(blue, _, _, _, _), Houses),
+    exists(house(_, _, water, _, _), Houses),
+    exists(house(_, _, _, _, zebra), Houses).
+
+solution(WaterDrinker, ZebraOwner) :-
+    puzzle(Houses),
+    exists(house(_, WaterDrinker, water, _, _), Houses),
+    exists(house(_, ZebraOwner, _, _, zebra), Houses).</textarea>
+    <p>Query</p>
+    <input id="query" type="text" value="solution(WaterDrinker, ZebraOwner)">
+    <input type="submit" id="submit" value="Ask">
+    <p>Answers</p>
+    <ul id="answers"></ul>
+  <script src="parser.js"></script>
+  <script src="interpreter.js"></script>
+  <script src="glue.js"></script>
+  </body>
+</html>
